@@ -23,8 +23,7 @@ questions that are math equations.
 Then choose how many rounds you'd like to play <enter> 
 for infinite mode.
 
-Your goal is to try to guess and answer the math equations right 
-with no wrong answers.
+Your goal is to try to guess and and answer the math equations right
 
  Good luck.
 

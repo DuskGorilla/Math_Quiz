@@ -1,6 +1,48 @@
+import random
+
+
+def yes_no(question):
+    while True:
+        response = input(question).lower()
+
+        # checks the users response, question
+        # repeat if the user does not enter yes / no
+        if response == "yes" or response == "y":
+            return "yes"
+        elif response == "no" or response == "n":
+            return "no"
+        else:
+            print("Please enter yes / no ")
+
+
+def instructions():
+    print("""
+*** Instructions ***
+To begin, choose number of rounds to be given a set of 
+questions that are math equations.
+
+Then choose how many rounds you'd like to play <enter> 
+for infinite mode.
+
+Your goal is to try to guess and and answer the math equations right
+
+ Good luck.
+
+    """)
+
+
+print("🎶🎶🎶Welcome to my very Hard Math Quiz🎶🎶🎶")
+print()
+
+want_instructions = yes_no("Do you want to see the instructions? ")
+
+# check if they use yes or no
+if want_instructions == "yes":
+    instructions()
+
+
 # checks for an integer more than 0 (allow <enter>)
 def int_check(question):
-
     while True:
         error = "Please enter an integer that is 1 or more."
 
@@ -8,7 +50,7 @@ def int_check(question):
 
         # check for infinite mode
         if response == "":
-            return "infinite"
+            return "10_rounds"
 
         try:
             response = int(response)
@@ -21,5 +63,83 @@ def int_check(question):
         except ValueError:
             print(error)
 
-
 # Main routine starts
+
+
+# initialise quiz variables
+mode = "10_rounds"
+rounds_played = 0
+end_game = "no"
+feedback = ""
+quiz_history = []
+all_scores = []
+rounds_lost = 0
+rounds_won = 0
+
+
+# Ask user for number of rounds or infinite mode
+num_rounds = int_check("How many rounds would you like? Push enter for 10 rounds")
+
+if num_rounds == "10_rounds":
+    mode = "10_rounds"
+    num_rounds = 10
+
+# Game loop starts here
+
+while rounds_played < num_rounds:
+
+    # Round headings
+    if mode == "10_rounds":
+        rounds_heading = f"\n👍👍👍 Round {rounds_played + 1} of {num_rounds} 👍👍👍"
+    else:
+        rounds_heading = f"\n✌️✌️✌️ Round {rounds_played + 1} of {num_rounds} ✌️✌️✌️"
+
+    print(rounds_heading)
+
+    guess = ""
+
+    number1 = random.randint(1, 5)
+    number2 = random.randint(1, 10)
+    question = int_check(f"What is {number1} + {number2} = ")
+    answer = number2 + number1
+    if question == answer:
+        print(f"YAY You got it correct! 👍👍 {rounds_won + 1}")
+    else:
+        print(f"Sorry? You got it wrong... 👎👎 {rounds_lost + 1}")
+    if question == answer:
+        feedback = f"Nice, You got it correct this was your answer {number1} + {number2} = {answer}"
+    else:
+        feedback = f"Aw, Too bad you got it wrong here's the actual answer {number1} + {number2} = {answer}"
+
+
+    rounds_played += 1
+
+# Game History / Statistics area
+    history_feedback = f"Round {rounds_played}: {feedback}"
+    quiz_history.append(history_feedback)
+
+    all_scores.append(answer)
+
+if rounds_played > 0:
+    # Calculate Statistics
+    all_scores.sort()
+    rounds_won = all_scores[0]
+    rounds_lost = all_scores[-1]
+    percent_won = rounds_won / rounds_played * 100
+    percent_lost = rounds_lost / rounds_played *100
+    average_score = sum(all_scores) / len(all_scores)
+
+    # Output Game Statistics
+    print("📊📊📊 Game Statistics 📊📊📊 ")
+
+    print(f"🎉 Answered Right: {rounds_won:.2f} \t "
+          f"😭 Answered Wrong: {rounds_lost:.2f} \t ")
+
+    # ask user if they want to see their game history and output if requested
+    see_history = yes_no("\nDo you want to see your game history? ")
+    if see_history == "yes":
+        for item in quiz_history:
+            print(item)
+
+    print()
+    print("Thanks for playing.")
