@@ -69,15 +69,16 @@ def int_check(question):
 # initialise quiz variables
 mode = "10_rounds"
 rounds_played = 0
-end_game = "no"
-feedback = ""
-quiz_history = []
-all_scores = []
 rounds_lost = 0
 rounds_won = 0
+feedback = ""
+quiz_history = []
+all_scores = [0]
+answered_right = 0
+answered_wrong = 0
 
 
-# Ask user for number of rounds or infinite mode
+# Ask user for number of rounds or 10 round mode
 num_rounds = int_check("How many rounds would you like? Push enter for 10 rounds")
 
 if num_rounds == "10_rounds":
@@ -90,31 +91,38 @@ while rounds_played < num_rounds:
 
     # Round headings
     if mode == "10_rounds":
-        rounds_heading = f"\n👍👍👍 Round {rounds_played + 1} of {num_rounds} 👍👍👍"
+        rounds_heading = f"\n👍👍👍 Question {rounds_played + 1} of {num_rounds} 👍👍👍"
     else:
-        rounds_heading = f"\n✌️✌️✌️ Round {rounds_played + 1} of {num_rounds} ✌️✌️✌️"
+        rounds_heading = f"\n✌️✌️✌️ Question {rounds_played + 1} of {num_rounds} ✌️✌️✌️"
 
     print(rounds_heading)
 
-    guess = ""
+
 
     number1 = random.randint(1, 5)
     number2 = random.randint(1, 10)
-    question = int_check(f"What is {number1} + {number2} = ")
+    question = int_check(f"What is {number1} + {number2} =")
     answer = number2 + number1
     if question == answer:
-        print(f"YAY You got it correct! 👍👍 {rounds_won + 1}")
+        print(f"YAY You got it correct! 👍👍 {answered_right + 1}")
+        answered_right += 1
+
     else:
-        print(f"Sorry? You got it wrong... 👎👎 {rounds_lost + 1}")
+        print(f"Sorry? You got it wrong... 👎👎 {answered_wrong + 1}")
+        answered_wrong += 1
+
+    # Give user their feedback with the question and answer
     if question == answer:
         feedback = f"Nice, You got it correct this was your answer {number1} + {number2} = {answer}"
+
     else:
         feedback = f"Aw, Too bad you got it wrong here's the actual answer {number1} + {number2} = {answer}"
 
 
+
     rounds_played += 1
 
-# Game History / Statistics area
+# Quiz History
     history_feedback = f"Round {rounds_played}: {feedback}"
     quiz_history.append(history_feedback)
 
@@ -122,24 +130,19 @@ while rounds_played < num_rounds:
 
 if rounds_played > 0:
     # Calculate Statistics
-    all_scores.sort()
     rounds_won = all_scores[0]
-    rounds_lost = all_scores[-1]
-    percent_won = rounds_won / rounds_played * 100
-    percent_lost = rounds_lost / rounds_played *100
-    average_score = sum(all_scores) / len(all_scores)
+    rounds_lost = all_scores[0]
+    print(f"you answered {rounds_played} questions")
+    print(f"you got wrong {answered_wrong} questions")
+    print(f"you got right {answered_right} questions")
 
-    # Output Game Statistics
-    print("📊📊📊 Game Statistics 📊📊📊 ")
-
-    print(f"🎉 Answered Right: {rounds_won:.2f} \t "
-          f"😭 Answered Wrong: {rounds_lost:.2f} \t ")
 
     # ask user if they want to see their game history and output if requested
-    see_history = yes_no("\nDo you want to see your game history? ")
+    see_history = yes_no("\nDo you want to see your quiz history? ")
     if see_history == "yes":
         for item in quiz_history:
             print(item)
+
 
     print()
     print("Thanks for playing.")
